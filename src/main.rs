@@ -21,11 +21,7 @@ fn is_user_registered(token: &str) -> bool {
         }
         Ok(false)
     }
-
-    return match file_contains("user_hashes.txt", token) {
-        Ok(r) => r,
-        Err(_) => false,
-    };
+    file_contains("user_hashes.txt", token).unwrap()
 }
 
 #[get("/login?<email>&<password>")]
