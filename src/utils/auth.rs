@@ -2,14 +2,14 @@ use std::fs::File;
 use std::io::{self, BufRead, Error};
 use std::path::Path;
 
-pub fn hash(email: String, password: String) -> String {
+pub fn hash(email: &String, password: &String) -> String {
     let salt = "my_awesome_service";
-    let digest = md5::compute(email + password.as_str() + salt);
+    let digest = md5::compute(email.to_owned() + password + salt);
     format!("{:x}", digest)
 }
 
-pub fn is_user_registered(token: &str) -> bool {
-    fn file_contains(filepath: &str, token: &str) -> Result<bool, Error> {
+pub fn is_user_registered(token: &String) -> bool {
+    fn file_contains(filepath: &str, token: &String) -> Result<bool, Error> {
         if Path::new(filepath).exists() {
             let file = File::open(filepath)?;
             let lines = io::BufReader::new(file).lines();
@@ -17,5 +17,6 @@ pub fn is_user_registered(token: &str) -> bool {
         }
         Ok(false)
     }
+    // file_contains always returns Ok so we can safety unwrap it
     file_contains("user_hashes.txt", token).unwrap()
 }
